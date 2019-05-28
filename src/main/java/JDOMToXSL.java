@@ -16,7 +16,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 
-public class JDOM2ToXSL {
+public class JDOMToXSL {
 
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerFactoryConfigurationError, TransformerException
     {
