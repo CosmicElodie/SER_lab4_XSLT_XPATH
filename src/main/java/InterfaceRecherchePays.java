@@ -8,8 +8,8 @@ public class InterfaceRecherchePays extends JFrame {
 
     private JPanel panelRecherche = new JPanel(new FlowLayout());
 
-    private JComboBox<String> continents = new JComboBox<>();
-    private JComboBox<String> langages = new JComboBox<>();
+    private JComboBox continents = new JComboBox();
+    private JComboBox langages = new JComboBox();
     private JButton createXSL = new JButton("Générer XSL");
     private JTextField superficieMin = new JTextField(5);
     private JTextField superficieMax = new JTextField(5);
