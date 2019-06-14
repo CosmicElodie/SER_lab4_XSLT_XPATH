@@ -29,8 +29,6 @@ public class InterfaceRecherchePays extends JFrame {
 	private NodeList countries;
 
 	public InterfaceRecherchePays(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
-
-
 		createXSL.addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -70,19 +68,19 @@ public class InterfaceRecherchePays extends JFrame {
 		langage.add(langages);
 		panelRecherche.add(langage);
 
-		JPanel supMin = new JPanel();
-		supMin.add(new JLabel("Superficie minimum"));
-		supMin.add(superficieMin);
-		panelRecherche.add(supMin);
+		JPanel superficieMin = new JPanel();
+		superficieMin.add(new JLabel("Superficie minimum"));
+		superficieMin.add(this.superficieMin);
+		panelRecherche.add(superficieMin);
 
-		JPanel supMax = new JPanel();
-		supMax.add(new JLabel("Superficie maximum"));
-		supMax.add(superficieMax);
-		panelRecherche.add(supMax);
+		JPanel superficieMax = new JPanel();
+		superficieMax.add(new JLabel("Superficie maximum"));
+		superficieMax.add(this.superficieMax);
+		panelRecherche.add(superficieMax);
 
-		JPanel createButton = new JPanel();
-		createButton.add(createXSL);
-		panelRecherche.add(createButton);
+		JPanel bouton = new JPanel();
+		bouton.add(createXSL);
+		panelRecherche.add(bouton);
 
 		add(panelRecherche, BorderLayout.CENTER);
 

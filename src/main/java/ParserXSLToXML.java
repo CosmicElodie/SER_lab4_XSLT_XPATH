@@ -57,33 +57,34 @@ public class ParserXSLToXML {
         try {
             DocumentBuilderFactory docFactory   = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder          = docFactory.newDocumentBuilder();
-            Document document                        = docBuilder.parse("src/naviDisplay/countries.xsl");
+            Document document                   = docBuilder.parse("src/naviDisplay/countries.xsl");
             Node root                           = document.getFirstChild();
 
-            Element root_element = (Element) root;
-            Element template = (Element)root_element.getElementsByTagName("xsl:template").item(firstElement);
-            Element body = (Element)template.getElementsByTagName("body").item(firstElement);
-            Element div = (Element)body.getElementsByTagName("div").item(firstElement);
-            Element foreach = (Element)div.getElementsByTagName("xsl:for-each").item(firstElement);
-            foreach.removeAttribute("select");
+            Element root_element    = (Element) root;
+            Element template        = (Element)root_element.getElementsByTagName("xsl:template").item(firstElement);
+            Element body            = (Element)template.getElementsByTagName("body").item(firstElement);
+            Element div             = (Element)body.getElementsByTagName("div").item(firstElement);
+            Element foreach         = (Element)div.getElementsByTagName("xsl:for-each").item(firstElement);
 
-            if(!XSLCountry.equals("")) {
-                XSLCountry = "countries/element[" + XSLCountry + "]";
-            } else {
+
+
+            if(XSLCountry.equals("")) {
                 XSLCountry = "countries/element";
             }
-            foreach.setAttribute("select", XSLCountry);
+            else if(!XSLCountry.equals("")) {
+                XSLCountry = "countries/element[" + XSLCountry + "]";
+            }
 
+            foreach.removeAttribute("select");
+            foreach.setAttribute("select", XSLCountry);
 
             DOMSource source = new DOMSource(document);
             FileWriter writer = new FileWriter(new File("src/naviDisplay/countries.xsl"));
             StreamResult result = new StreamResult(writer);
-
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             transformer.transform(source, result);
-
 
 
         } catch (ParserConfigurationException pce) {
