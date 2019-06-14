@@ -22,18 +22,15 @@ public class InterfaceRecherchePays extends JFrame {
 	private JTextField superficieMin = new JTextField(5);
 	private JTextField superficieMax = new JTextField(5);
 
-	private List<String> regiontest = new ArrayList<>();
-	private List<String> langagetest = new ArrayList<>();
+	private List<String> regions = new ArrayList<>();
+	private static String region[];
+	private List<String> languages = new ArrayList<>();
+	private static String language[];
 
 	private DocumentBuilderFactory factory;
 	private NodeList countries;
 
 	public InterfaceRecherchePays(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
-		String[] region = setRegion();
-		region[0] = "";
-		String[] language = setLanguage();
-		language [0] = "";
-
 		createXSL.addMouseListener(new MouseAdapter()
 		{
 
@@ -44,10 +41,10 @@ public class InterfaceRecherchePays extends JFrame {
 				super.mouseClicked(e);
 
 				// Création des fichiers XSL selon ce qui est demandé
-				String continent = Objects.requireNonNull(continents.getSelectedItem()).toString();
-				String langage = Objects.requireNonNull(langages.getSelectedItem()).toString();
-				String min = superficieMin.getText();
-				String max = superficieMax.getText();
+				String 	continent	= Objects.requireNonNull(continents.getSelectedItem()).toString(),
+						langage		= Objects.requireNonNull(langages.getSelectedItem()).toString(),
+						min			= superficieMin.getText(),
+						max			= superficieMax.getText();
 
 				//Affichage sur le terminal
 				ParserXSLToXML parser = new ParserXSLToXML();
@@ -56,8 +53,10 @@ public class InterfaceRecherchePays extends JFrame {
 			}
 		});
 
-		continents = new JComboBox<>(region);
-		langages = new JComboBox<>(language);
+		displayPanelList();
+
+		continents	= new JComboBox<>(region);
+		langages	= new JComboBox<>(language);
 
 		JPanel panelRecherche = new JPanel(new FlowLayout());
 		panelRecherche.setLayout(new BoxLayout(panelRecherche, BoxLayout.PAGE_AXIS));
@@ -72,19 +71,19 @@ public class InterfaceRecherchePays extends JFrame {
 		langage.add(langages);
 		panelRecherche.add(langage);
 
-		JPanel superficieMin = new JPanel();
-		superficieMin.add(new JLabel("Superficie minimum"));
-		superficieMin.add(this.superficieMin);
-		panelRecherche.add(superficieMin);
+		JPanel minSuperficy = new JPanel();
+		minSuperficy.add(new JLabel("Superficie minimum"));
+		minSuperficy.add(this.superficieMin);
+		panelRecherche.add(minSuperficy);
 
-		JPanel superficieMax = new JPanel();
-		superficieMax.add(new JLabel("Superficie maximum"));
-		superficieMax.add(this.superficieMax);
-		panelRecherche.add(superficieMax);
+		JPanel maxSuperficy = new JPanel();
+		maxSuperficy.add(new JLabel("Superficie maximum"));
+		maxSuperficy.add(this.superficieMax);
+		panelRecherche.add(maxSuperficy);
 
-		JPanel bouton = new JPanel();
-		bouton.add(createXSL);
-		panelRecherche.add(bouton);
+		JPanel button = new JPanel();
+		button.add(createXSL);
+		panelRecherche.add(button);
 
 		add(panelRecherche, BorderLayout.CENTER);
 
@@ -93,6 +92,13 @@ public class InterfaceRecherchePays extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 		setTitle("Interface de recherche de pays");
+	}
+
+	public void displayPanelList() throws ParserConfigurationException, SAXException, IOException {
+		region = setRegion();
+		region[0] = "";
+		language = setLanguage();
+		language [0] = "";
 	}
 
 	private NodeList getNodeList(DocumentBuilderFactory factory) throws ParserConfigurationException, SAXException, IOException
@@ -119,8 +125,8 @@ public class InterfaceRecherchePays extends JFrame {
 					final Element country = (Element) countries.item(indexCountries);
 
 					if (country.getElementsByTagName("region").item(0) != null
-							&& !regiontest.contains(country.getElementsByTagName("region").item(0).getTextContent()))
-						regiontest.add(country.getElementsByTagName("region").item(0).getTextContent());
+							&& !regions.contains(country.getElementsByTagName("region").item(0).getTextContent()))
+						regions.add(country.getElementsByTagName("region").item(0).getTextContent());
 				}
 
 				++indexCountries;
@@ -130,7 +136,7 @@ public class InterfaceRecherchePays extends JFrame {
 			e.printStackTrace();
 		}
 
-		return regiontest.toArray(new String[0]);
+		return regions.toArray(new String[0]);
 	}
 
 	private String[] setLanguage() throws IOException, SAXException, ParserConfigurationException {
@@ -159,11 +165,11 @@ public class InterfaceRecherchePays extends JFrame {
 						{
 							Element lang = (Element) languages.item(indexLanguage);
 							if (lang.getElementsByTagName("element").item(0) != null
-									&& !langagetest.contains(((Element) lang.getElementsByTagName("element").item(0))
+									&& !this.languages.contains(((Element) lang.getElementsByTagName("element").item(0))
 									.getElementsByTagName("name").item(0).getTextContent()))
 							{
 
-								langagetest.add(((Element) lang.getElementsByTagName("element").item(0))
+								this.languages.add(((Element) lang.getElementsByTagName("element").item(0))
 										.getElementsByTagName("name").item(0).getTextContent());
 							}
 						}
@@ -178,7 +184,7 @@ public class InterfaceRecherchePays extends JFrame {
 			e.printStackTrace();
 		}
 
-		return langagetest.toArray(new String[0]);
+		return languages.toArray(new String[0]);
 	}
 
 	public static void main(String... args) throws IOException, SAXException, ParserConfigurationException
