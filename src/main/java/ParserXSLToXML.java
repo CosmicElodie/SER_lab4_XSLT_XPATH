@@ -83,7 +83,6 @@ public class ParserXSLToXML {
             StreamResult result = new StreamResult(writer);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             transformer.transform(source, result);
 
 
@@ -98,7 +97,7 @@ public class ParserXSLToXML {
         }
     }
 
-    public void displayInformations(String continent, String langage, String minSuperficy, String maxSuperficy)
+    public void displayInformationsTerminal(String continent, String langage, String minSuperficy, String maxSuperficy)
     {
         String notSpecified = "Not specified.";
         if(continent.equals(""))

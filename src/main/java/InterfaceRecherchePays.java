@@ -29,10 +29,17 @@ public class InterfaceRecherchePays extends JFrame {
 	private NodeList countries;
 
 	public InterfaceRecherchePays(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
-		createXSL.addMouseListener(new MouseAdapter() {
+		String[] region = setRegion();
+		region[0] = "";
+		String[] language = setLanguage();
+		language [0] = "";
+
+		createXSL.addMouseListener(new MouseAdapter()
+		{
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e)
+			{
 
 				super.mouseClicked(e);
 
@@ -45,12 +52,9 @@ public class InterfaceRecherchePays extends JFrame {
 				//Affichage sur le terminal
 				ParserXSLToXML parser = new ParserXSLToXML();
 				ParserXSLToXML.writeXSLCountry(continent, langage, min, max);
-				parser.displayInformations(continent, langage, min, max);
+				parser.displayInformationsTerminal(continent, langage, min, max);
 			}
 		});
-
-		String[] region = setRegion();
-		String[] language = setLanguage();
 
 		continents = new JComboBox<>(region);
 		langages = new JComboBox<>(language);
