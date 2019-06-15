@@ -16,18 +16,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ParserXSLToXML {
+    final static String emptyString = "";
     private static String XSLCountry;
 
     static public void writeXSLCountry(String continent, String langage, String min, String max) {
         final int firstElement = 0;
+        XSLCountry = emptyString;
 
-        XSLCountry = "";
-
-        if(!continent.equals("")) {
+        if(!continent.equals(emptyString)) {
             XSLCountry = "region='" + continent + "'";
         }
 
-        if(!langage.equals("")) {
+        if(!langage.equals(emptyString)) {
 
             if(!XSLCountry.equals("")) {
                 XSLCountry += " and ";
@@ -36,18 +36,18 @@ public class ParserXSLToXML {
             XSLCountry += "./languages/element[name='" + langage + "']";
         }
 
-        if(!min.equals("")) {
+        if(!min.equals(emptyString)) {
 
-            if(!XSLCountry.equals("")) {
+            if(!XSLCountry.equals(emptyString)) {
                 XSLCountry += " and ";
             }
 
             XSLCountry += "area>=" + min;
         }
 
-        if(!max.equals("")) {
+        if(!max.equals(emptyString)) {
 
-            if(!XSLCountry.equals("")) {
+            if(!XSLCountry.equals(emptyString)) {
                 XSLCountry += " and ";
             }
 

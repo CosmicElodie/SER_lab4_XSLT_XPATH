@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class InterfaceRecherchePays extends JFrame {
-
-	private final String regionString = "region";
 	private JComboBox<String> continents;
 	private JComboBox<String> langages;
 	JButton createXSL = new JButton("Générer XSL");
@@ -24,9 +22,9 @@ public class InterfaceRecherchePays extends JFrame {
 	private JTextField superficieMax = new JTextField(5);
 
 	private List<String> continentsList = new ArrayList<>();
-	private static String continent[];
+	private static String continentsArray[];
 	private List<String> languagesList = new ArrayList<>();
-	private static String language[];
+	private static String languageArray[];
 
 	private DocumentBuilderFactory factory;
 	private NodeList countries;
@@ -52,8 +50,8 @@ public class InterfaceRecherchePays extends JFrame {
 
 		displayPanelList();
 
-		continents	= new JComboBox<>(continent);
-		langages	= new JComboBox<>(language);
+		continents	= new JComboBox<>(continentsArray);
+		langages	= new JComboBox<>(languageArray);
 
 		JPanel panelRecherche = new JPanel(new FlowLayout());
 		panelRecherche.setLayout(new BoxLayout(panelRecherche, BoxLayout.PAGE_AXIS));
@@ -152,7 +150,7 @@ public class InterfaceRecherchePays extends JFrame {
 				}
 				++indexCountry;
 			}
-			language = languagesList.toArray(new String[0]);
+			languageArray = languagesList.toArray(new String[0]);
 
 		} catch (DOMException e) {
 			e.printStackTrace();
@@ -161,7 +159,9 @@ public class InterfaceRecherchePays extends JFrame {
 
 	private void setContinent()
 	{
+		final String regionString = "region";
 		factory = DocumentBuilderFactory.newInstance();
+
 		try {
 			countries = getNodeList(factory);
 			short elementNode = Node.ELEMENT_NODE;
@@ -186,7 +186,7 @@ public class InterfaceRecherchePays extends JFrame {
 
 				++indexCountries;
 			}
-			continent = continentsList.toArray(new String[0]);
+			continentsArray = continentsList.toArray(new String[0]);
 
 		} catch (final ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
