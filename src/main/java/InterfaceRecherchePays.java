@@ -16,15 +16,16 @@ import java.util.Objects;
 
 public class InterfaceRecherchePays extends JFrame {
 
+	private final String regionString = "region";
 	private JComboBox<String> continents;
 	private JComboBox<String> langages;
 	JButton createXSL = new JButton("Générer XSL");
 	private JTextField superficieMin = new JTextField(5);
 	private JTextField superficieMax = new JTextField(5);
 
-	private List<String> regions = new ArrayList<>();
-	private static String region[];
-	private List<String> languages = new ArrayList<>();
+	private List<String> continentsList = new ArrayList<>();
+	private static String continent[];
+	private List<String> languagesList = new ArrayList<>();
 	private static String language[];
 
 	private DocumentBuilderFactory factory;
@@ -33,20 +34,16 @@ public class InterfaceRecherchePays extends JFrame {
 	public InterfaceRecherchePays(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
 		createXSL.addMouseListener(new MouseAdapter()
 		{
-
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-
 				super.mouseClicked(e);
 
-				// Création des fichiers XSL selon ce qui est demandé
 				String 	continent	= Objects.requireNonNull(continents.getSelectedItem()).toString(),
 						langage		= Objects.requireNonNull(langages.getSelectedItem()).toString(),
 						min			= superficieMin.getText(),
 						max			= superficieMax.getText();
 
-				//Affichage sur le terminal
 				ParserXSLToXML parser = new ParserXSLToXML();
 				ParserXSLToXML.writeXSLCountry(continent, langage, min, max);
 				parser.displayInformationsTerminal(continent, langage, min, max);
@@ -55,7 +52,7 @@ public class InterfaceRecherchePays extends JFrame {
 
 		displayPanelList();
 
-		continents	= new JComboBox<>(region);
+		continents	= new JComboBox<>(continent);
 		langages	= new JComboBox<>(language);
 
 		JPanel panelRecherche = new JPanel(new FlowLayout());
@@ -95,10 +92,8 @@ public class InterfaceRecherchePays extends JFrame {
 	}
 
 	public void displayPanelList() throws ParserConfigurationException, SAXException, IOException {
-		region = setRegion();
-		region[0] = "";
-		language = setLanguage();
-		language [0] = "";
+		setContinent();
+		setLanguage();
 	}
 
 	private NodeList getNodeList(DocumentBuilderFactory factory) throws ParserConfigurationException, SAXException, IOException
@@ -109,46 +104,21 @@ public class InterfaceRecherchePays extends JFrame {
 		return inputCountries.getElementsByTagName("element");
 	}
 
-
-	private String[] setRegion()
-	{
-		factory = DocumentBuilderFactory.newInstance();
-		try {
-			countries = getNodeList(factory);
-			short elementNode = Node.ELEMENT_NODE;
-			int countriesLength = countries.getLength(),
-				indexCountries = 0;
-
-			while(indexCountries < countriesLength)
-			{
-				if (countries.item(indexCountries).getNodeType() == elementNode) {
-					final Element country = (Element) countries.item(indexCountries);
-
-					if (country.getElementsByTagName("region").item(0) != null
-							&& !regions.contains(country.getElementsByTagName("region").item(0).getTextContent()))
-						regions.add(country.getElementsByTagName("region").item(0).getTextContent());
-				}
-
-				++indexCountries;
-			}
-
-		} catch (final ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
-		}
-
-		return regions.toArray(new String[0]);
-	}
-
-	private String[] setLanguage() throws IOException, SAXException, ParserConfigurationException {
+	private void setLanguage() throws IOException, SAXException, ParserConfigurationException {
 
 		factory = DocumentBuilderFactory.newInstance();
 		countries = getNodeList(factory);
 
 		try {
 			int 	indexCountry 	= 0,
-					indexLanguage,
+					indexLanguage	= 0,
 					countriesSize 	= countries.getLength();
 			short 	elementNode 	= Node.ELEMENT_NODE;
+
+			if(indexLanguage == 0)
+			{
+				this.languagesList.add("");
+			}
 
 			while(indexCountry < countriesSize)
 			{
@@ -161,30 +131,66 @@ public class InterfaceRecherchePays extends JFrame {
 
 					while(indexLanguage < langLength)
 					{
-						if (elementNode == languages.item(indexLanguage).getNodeType())
+
+						boolean isNodeSimilar = (elementNode == languages.item(indexLanguage).getNodeType());
+
+						if (isNodeSimilar)
 						{
-							Element lang = (Element) languages.item(indexLanguage);
-							if (lang.getElementsByTagName("element").item(0) != null
-									&& !this.languages.contains(((Element) lang.getElementsByTagName("element").item(0))
+							Element language_element = (Element) languages.item(indexLanguage);
+							boolean isLanguageElementNotNull = (language_element.getElementsByTagName("element").item(0) != null);
+
+							if (isLanguageElementNotNull
+									&& !this.languagesList.contains(((Element) language_element.getElementsByTagName("element").item(0))
 									.getElementsByTagName("name").item(0).getTextContent()))
 							{
-
-								this.languages.add(((Element) lang.getElementsByTagName("element").item(0))
+								this.languagesList.add(((Element) language_element.getElementsByTagName("element").item(0))
 										.getElementsByTagName("name").item(0).getTextContent());
 							}
 						}
 						++indexLanguage;
 					}
 				}
-
 				++indexCountry;
 			}
+			language = languagesList.toArray(new String[0]);
 
 		} catch (DOMException e) {
 			e.printStackTrace();
 		}
+	}
 
-		return languages.toArray(new String[0]);
+	private void setContinent()
+	{
+		factory = DocumentBuilderFactory.newInstance();
+		try {
+			countries = getNodeList(factory);
+			short elementNode = Node.ELEMENT_NODE;
+			int countriesLength = countries.getLength(),
+					indexCountries = 0,
+					firstItem = 0;
+
+			while(indexCountries < countriesLength)
+			{
+				if(indexCountries == 0)
+				{
+					continentsList.add("");
+				}
+				else if (countries.item(indexCountries).getNodeType() == elementNode)
+				{
+					final Element country = (Element) countries.item(indexCountries);
+
+					if (country.getElementsByTagName(regionString).item(firstItem) != null
+							&& !continentsList.contains(country.getElementsByTagName(regionString).item(firstItem).getTextContent()))
+						continentsList.add(country.getElementsByTagName(regionString).item(firstItem).getTextContent());
+				}
+
+				++indexCountries;
+			}
+			continent = continentsList.toArray(new String[0]);
+
+		} catch (final ParserConfigurationException | SAXException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String... args) throws IOException, SAXException, ParserConfigurationException
