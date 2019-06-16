@@ -1,3 +1,9 @@
+/**
+ * Laboratoire  : n°4 - XSLT - XPATH
+ * Élèves       : Dutu Launay Marion, Lagier Elodie, Stalder Nicodème
+ * Date         : 16.06.2019
+ */
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,16 +21,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ParserXSLToXML {
+public class ParserXSLToXML
+{
     final static String emptyString = "";
     private static String XSLCountry;
 
-    static public void writeXSLCountry(String continent, String langage, String min, String max) {
+    static public void writeXSLCountry(String continent, String langage, String superficyMin, String superficyMax) {
         final int firstElement = 0;
         XSLCountry = emptyString;
 
         if(!continent.equals(emptyString)) {
-            XSLCountry = "region='" + continent + "'";
+            XSLCountry = "region = ('" + continent + "')";
         }
 
         if(!langage.equals(emptyString)) {
@@ -33,40 +40,38 @@ public class ParserXSLToXML {
                 XSLCountry += " and ";
             }
 
-            XSLCountry += "./languages/element[name='" + langage + "']";
+            XSLCountry += "./languages/element[(name = '" + langage + "')]";
         }
 
-        if(!min.equals(emptyString)) {
+        if(!superficyMin.equals(emptyString)) {
 
             if(!XSLCountry.equals(emptyString)) {
                 XSLCountry += " and ";
             }
 
-            XSLCountry += "area>=" + min;
+            XSLCountry += "area >=" + superficyMin;
         }
 
-        if(!max.equals(emptyString)) {
+        if(!superficyMax.equals(emptyString)) {
 
             if(!XSLCountry.equals(emptyString)) {
                 XSLCountry += " and ";
             }
 
-            XSLCountry += "area<=" + max;
+            XSLCountry += "area <=" + superficyMax;
         }
 
         try {
-            DocumentBuilderFactory docFactory   = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder          = docFactory.newDocumentBuilder();
-            Document document                   = docBuilder.parse("src/naviDisplay/countries.xsl");
-            Node root                           = document.getFirstChild();
+            DocumentBuilderFactory  docFactory  = DocumentBuilderFactory.newInstance();
+            DocumentBuilder         docBuilder  = docFactory.newDocumentBuilder();
+            Document                document    = docBuilder.parse("src/naviDisplay/countries.xsl");
+            Node                    root        = document.getFirstChild();
 
             Element root_element    = (Element) root;
             Element template        = (Element)root_element.getElementsByTagName("xsl:template").item(firstElement);
             Element body            = (Element)template.getElementsByTagName("body").item(firstElement);
             Element div             = (Element)body.getElementsByTagName("div").item(firstElement);
             Element foreach         = (Element)div.getElementsByTagName("xsl:for-each").item(firstElement);
-
-
 
             if(XSLCountry.equals("")) {
                 XSLCountry = "countries/element";
@@ -75,25 +80,24 @@ public class ParserXSLToXML {
                 XSLCountry = "countries/element[" + XSLCountry + "]";
             }
 
-            foreach.removeAttribute("select");
             foreach.setAttribute("select", XSLCountry);
 
-            DOMSource source = new DOMSource(document);
-            FileWriter writer = new FileWriter(new File("src/naviDisplay/countries.xsl"));
+            DOMSource source    = new DOMSource(document);
+            FileWriter writer   = new FileWriter(new File("src/naviDisplay/countries.xsl"));
             StreamResult result = new StreamResult(writer);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.transform(source, result);
 
 
-        } catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } catch (SAXException sae) {
-            sae.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
         }
     }
 
@@ -102,22 +106,23 @@ public class ParserXSLToXML {
         String notSpecified = "Not specified.";
         if(continent.equals(""))
         {
-            continent = notSpecified;
+            continent       = notSpecified;
         }
         if(langage.equals(""))
         {
-            langage = notSpecified;
+            langage         = notSpecified;
         }
         if(minSuperficy.equals(""))
         {
-            minSuperficy = notSpecified;
+            minSuperficy    = notSpecified;
         }
         if(maxSuperficy.equals(""))
         {
-            maxSuperficy = notSpecified;
+            maxSuperficy    = notSpecified;
         }
 
-        System.out.println("Continent\t\t: " + continent + "\n" +
+        System.out.println("***RECHERCHE***\n" +
+                        "Continent\t\t: " + continent + "\n" +
                         "Langue(s)\t\t: " + langage + "\n" +
                         "Superficie min\t: " + minSuperficy + "\n" +
                         "Superficie max\t: " + maxSuperficy + "\n");

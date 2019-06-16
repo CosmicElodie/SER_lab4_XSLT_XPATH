@@ -10,7 +10,7 @@
   </head>
 <body>
   <div class="row">
-    <xsl:for-each select="countries/element[region='Americas' and ./languages/element[name='Spanish']]">
+    <xsl:for-each select="countries/element[region = ('Americas') and ./languages/element[(name = 'English')]]">
       <div class="col-2">
       <button class="btn btn-light" data-toggle="modal" type="button">
         <xsl:attribute name="data-target">#modal<xsl:value-of select="numericCode"/></xsl:attribute>
